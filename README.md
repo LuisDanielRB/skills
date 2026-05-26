@@ -22,7 +22,7 @@ Supporting skills:
 - **handoff** — compact the current conversation into a doc so a fresh agent can pick up. An interrupt you fire whenever context fills up, not a pipeline phase.
 - **write-a-skill** — meta-skill for authoring new skills in the house style.
 
-`ralph/` is legacy (Docker-based AFK loop) and unused — ignore it.
+`ralph/` is the legacy agentic-execution experiment, now superseded — see [Agentic execution](#agentic-execution-later) and [`ralph/README.md`](ralph/README.md).
 
 ## Conventions
 
@@ -42,3 +42,18 @@ done
 ```
 
 Then invoke a skill in any session, e.g. `/do-work` or `/to-prd`.
+
+## Agentic execution (later)
+
+Once `to-issues` has produced a queue of **AFK** issues, you can have an agent drain them instead of running `/do-work` by hand. This is **deferred on purpose** — the AFK label is the human gate (applied at issue-creation time), so hand-run `/do-work` for the first weeks to build trust, then graduate.
+
+Key reframe: **the runner is a driver, not a skill** — it just calls `/do-work` — so it costs nothing against the 10-skill cap, and **Docker is no longer needed** (Claude Code's built-in sandboxing / permission modes replace the old container).
+
+| When you want it | Tool | Oversight |
+|---|---|---|
+| First few weeks | hand-run `/do-work` per issue | full — this *is* the HITL default |
+| Supervised auto | `/loop /do-work` (built-in `/loop` skill, self-paced) | you can interrupt anytime |
+| Walk-away / overnight | headless `claude -p` shell loop, targeting `docs/issues/` | low |
+| Scheduled / cadence | `/schedule` a routine (built-in) | none |
+
+When you build the headless loop, the salvageable kernel lives in `ralph/` — the task-selection priority and the loop-until-done sentinel. See [`ralph/README.md`](ralph/README.md) for what to keep and what to change.
